@@ -1,6 +1,5 @@
 import algorithm.DFADeemo;
 import testPackage.SqlBuilder;
-import algorithm.DFA ;
 
 public class Main {
     public static void main(String[] args) {

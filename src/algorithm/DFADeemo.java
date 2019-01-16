@@ -31,7 +31,7 @@ public class DFADeemo {
         // 记录当前的字符位置
         int i = 0 ;
         // 开始读取字符
-        while ( i <=  contentLen && state != "非法字符" && state != this.endState) {
+        while ( i <  contentLen && state != "非法字符" && state != this.endState) {
             char token = this.getToken( i ) ;
             String nextState = this.nextState( state , token ) ;
             state = nextState ;

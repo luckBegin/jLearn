@@ -18,14 +18,8 @@ public class Main {
 
         System.out.println("======================");
 
-//        DFA Dfa = new DFA(0 , 2) ;
-//
-//        Dfa.setContent("abababa");
-//
-//        Dfa.result();
-
         DFADeemo dfaDeemo = new DFADeemo(0 , 3) ;
-        dfaDeemo.setContent("absababcccccc");
+        dfaDeemo.setContent("abababsc");
         dfaDeemo.result();
     }
 }

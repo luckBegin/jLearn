@@ -19,7 +19,7 @@ public class SqlBuilder {
         return this.out ;
     }
 
-    public static  SqlBuilder Mysql (){
+    public static  SqlBuilder Mysql(){
         return new SqlBuilder();
     }
 }

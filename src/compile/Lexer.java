@@ -1,142 +1,91 @@
 package compile;
 import java.util.* ;
 
-public class Lexer {
+public class Lexer{
+    // 存放操作符
+    private HashMap<String, String> keyWordMap = new HashMap<String, String>() ;
+    // 存放输入文本
+    private String content  ;
 
-    public static final int  EOI = 0;
-    public static final int  SEMI = 1;
-    public static final int  PLUS = 2;
-    public static final int  TIMES = 3;
-    public static final int  LP = 4;
-    public static final int  RP = 5;
-    public static final int  NUM_OR_ID = 6;
-
-    private int lookAhead = -1;
-
-    public String yytext = "";
-    public int yyleng = 0;
-    public int yylineno = 0;
-
-    private String input_buffer = "";
-    private String current = "";
-
-    private boolean isAlnum(char c) {
-        if (Character.isAlphabetic(c) == true ||
-                Character.isDigit(c) == true) {
-            return true;
-        }
-
-        return false;
+    public void  run( String content ){
+        this.setContent(content);
+        this.scan(0);
     }
 
-    private int lex() {
+    private void setContent(String content){
+        keyWordMap.put(";" , "1") ;
+        keyWordMap.put("+" , "2") ;
+        keyWordMap.put("*" , "3") ;
+        keyWordMap.put("NUM_OR_ID" , "4") ;
 
-        while (true) {
+        this.content = content ;
+    }
 
-            while (current == "") {
-                Scanner s = new Scanner(System.in);
-                while (true) {
-                    String line = s.nextLine();
-                    if (line.equals("end")) {
-                        break;
-                    }
-                    input_buffer += line;
-                }
-                s.close();
+    private void scan( int index ){
 
-                if (input_buffer.length() == 0) {
-                    current = "";
-                    return EOI;
-                }
+        if( index < this.content.length() ){
+            // 读取字符流
+            char token = this.getToken( index ) ;
 
-                current = input_buffer;
-                ++yylineno;
-                current.trim();
-            }//while (current != "")
+            // 判断是否是数字
+            boolean isDigit = this.isIllegal( token ) ;
 
-            for (int i = 0; i < current.length(); i++) {
-
-                yyleng = 0;
-                yytext = current.substring(0, 1);
-                switch (current.charAt(i)) {
-                    case ';': current = current.substring(1); return SEMI;
-                    case '+': current = current.substring(1); return PLUS;
-                    case '*': current = current.substring(1);return TIMES;
-                    case '(': current = current.substring(1);return LP;
-                    case ')': current = current.substring(1);return RP;
-
-                    case '\n':
-                    case '\t':
-                    case ' ': current = current.substring(1); break;
-
-                    default:
-                        if (isAlnum(current.charAt(i)) == false) {
-                            System.out.println("Ignoring illegal input: " + current.charAt(i));
-                        }
-                        else {
-
-                            while (isAlnum(current.charAt(i))) {
-                                i++;
-                                yyleng++;
-                            }
-
-                            yytext = current.substring(0, yyleng);
-                            current = current.substring(yyleng);
-                            return NUM_OR_ID;
-                        }
-
-                        break;
-
-                }
+            if(isDigit){
+                index += Character.isDigit( token ) ? this.digital( index )  :  this.token( index ) ;
+                this.scan( index );
+            }else{
+                System.out.println("illegal input string");
             }
         }
     }
 
-    public boolean match(int token) {
-        if (lookAhead == -1) {
-            lookAhead = lex();
-        }
-
-        return token == lookAhead;
+    private char getToken( int index){
+        return this.content.charAt(index) ;
     }
 
-    public void advance() {
-        lookAhead = lex();
+
+    private boolean isIllegal(char token ){
+        return Character.isDigit( token )
+                || this.keyWordMap.containsKey( token )
+                || token == ' ';
     }
 
-    public void runLexer() {
-        while (!match(EOI)) {
-            System.out.println("Token: " + token() + " ,Symbol: " + yytext );
-            advance();
+    public int digital( int index ) {
+        String output = "" ;
+        String symbol = this.keyWordMap.get("NUM_OR_ID") ;
+
+        while ( Character.isDigit( this.content.charAt(index))){
+            output += this.content.charAt(index) ;
+            index += 1 ;
         }
+        System.out.println("Token : " + output + " , Symbol : " + symbol  );
+        return index ;
     }
 
-    private String token() {
-        String token = "";
-        switch (lookAhead) {
-            case EOI:
-                token = "EOI";
-                break;
-            case PLUS:
-                token = "PLUS";
-                break;
-            case TIMES:
-                token = "TIMES";
-                break;
-            case NUM_OR_ID:
-                token = "NUM_OR_ID";
-                break;
-            case SEMI:
-                token = "SEMI";
-                break;
-            case LP:
-                token = "LP";
-                break;
-            case RP:
-                token = "RP";
-                break;
+    public int token( int index) {
+        char token = this.content.charAt(index) ;
+
+        String output ;
+        switch (token){
+            case '+' :
+                output = this.keyWordMap.get("+") ;
+            break;
+            case '*' :
+                output = this.keyWordMap.get("*") ;
+            break;
+
+            case ';' :
+                output = this.keyWordMap.get(";") ;
+            break;
+            case ' ' :
+                output = "space" ;
+            break;
+            default:
+                output = "invalid token " ;
+            break;
         }
 
-        return token;
+        System.out.println("Token : " + output + " , Symbol : " + "space"  );
+        return 1 ;
     }
 }

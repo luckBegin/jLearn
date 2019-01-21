@@ -16,17 +16,18 @@ public class TestLexer {
             "public", "return", "short", "static", "super", "switch",
             "synchronized", "this", "throw", "throws", "transient", "try",
             "void", "volatile", "while", "strictfp","enum","goto","const","assert" , "FileNotFoundException"};
+
     // 运算符
-    private char operators[] = { '+', '-', '*', '/', '=', '>', '<', '&' };
+    private Character operators[] = new  Character[] { '+', '-', '*', '/', '=', '>', '<', '&' };
 
     // 分隔符
-    private char separators[] = { ',', ';', '{', '}', '(', ')', '[', ']', '_', ':', '、', '.', '"' };
+    private String[] separators ={ ",", ";", "{", "}", "(", ")", "[", "]", "_", ":", "、", ".", "\"" };
 
     // 当前处理的字符
     private char token ;
 
     // 拼接的语句串
-    private String strToken ;
+    private String strToken = "";
 
     //用来存放读取的序号
     private int i  ;
@@ -54,8 +55,8 @@ public class TestLexer {
     }
 
     // 判断是否为分隔符
-    private boolean isSperate (){
-        return Arrays.asList( separators ).contains( token ) ;
+    private boolean isSeparator (){
+        return Arrays.asList( separators ).contains(token + "") ;
     }
 
     // 判断是否为运算符号
@@ -86,18 +87,17 @@ public class TestLexer {
     }
 
     public void analyse(){
-        boolean isCode, value;
-
-        strToken = ""; // 置strToken为空串
-
         while ( i < buffer.length() ){
             getToken();
             isSpace();
             if( isLetter() ){
+                // 当前读取的字符为字母或者是数字时则继续读取
                 while (isLetter() || isDigit()) {
                     concat();
                     getToken();
                 }
+                // 读取到非数字或者字母的字符 ， 则回退到上一个字符
+                // 例如 page+= 1 , 读取到 + 号之后 , 跳出循环 , 回退到原本字符e的位置
                 retract() ;
 
                 // 如果是关键字则进行关键字处理
@@ -110,17 +110,19 @@ public class TestLexer {
                 // 分析完一个词 , 则置空strToken ;
                 strToken = "";
             }else if( isDigit() ){
+
                 while (isDigit()) {
                     concat();
                     getToken();
                 }
+
                 System.out.println("读取到数字 ---- " + strToken );
                 retract() ;
                 strToken = "";
             }else if( isOperate() ){
-                System.out.println("读取到操作符 ---- " + strToken );
-            }else if( isSperate() ){
-                System.out.println("读取到分隔符 ---- " + strToken );
+                System.out.println("读取到操作符 ---- " + token );
+            }else if( isSeparator() ){
+                System.out.println("读取到分隔符 ---- " + token );
             }
         }
     }
@@ -145,7 +147,7 @@ public class TestLexer {
     }
 
     public static void main(String[] args) {
-        TestLexer alr = new TestLexer();//文件路径
+        TestLexer alr = new TestLexer() ;
         alr.readFile();
         alr.analyse();
     }

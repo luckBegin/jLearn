@@ -11,7 +11,7 @@ public class Lexer{
         this.setContent(content);
         this.scan(0);
     }
-
+    
     private void setContent(String content){
         keyWordMap.put(";" , "1") ;
         keyWordMap.put("+" , "2") ;
@@ -42,7 +42,6 @@ public class Lexer{
     private char getToken( int index){
         return this.content.charAt(index) ;
     }
-
 
     private boolean isIllegal(char token ){
         return Character.isDigit( token )

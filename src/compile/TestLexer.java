@@ -39,7 +39,8 @@ public class TestLexer {
 
     // 判断是否为字母
     private boolean isLetter(){
-        return Character.isLetter( token );
+        String _token = token + "";
+        return _token.matches("[a-zA-Z\\u4E00-\\u9FFF]") ;
     }
 
     // 判断是否是数字

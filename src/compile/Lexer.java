@@ -11,13 +11,12 @@ public class Lexer{
         this.setContent(content);
         this.scan(0);
     }
-    
+
     private void setContent(String content){
         keyWordMap.put(";" , "1") ;
         keyWordMap.put("+" , "2") ;
         keyWordMap.put("*" , "3") ;
         keyWordMap.put("NUM_OR_ID" , "4") ;
-
         this.content = content ;
     }
 

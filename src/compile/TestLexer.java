@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class TestLexer {
+public class TestLexer{
     // 关键词表
     private String keyWords[] = { "abstract", "boolean", "break", "byte",
             "case", "catch", "char", "class", "continue", "default", "do",
